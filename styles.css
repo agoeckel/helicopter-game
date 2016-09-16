@@ -17,7 +17,6 @@
   position: absolute;
   margin-left: 200px;
   z-index: 3;
-  border: 2px solid red;
 }
 
 #background {
@@ -203,20 +202,23 @@ to {background-position: -100% 0;}
 }
 
 .missile {
+  display: none;
+  transform: rotate(180deg);
+  top: 94%;
   position: absolute;
   float: right;
   width: 40px;
   height: 15px;
-  background-color: black;
+  z-index: 2;
 }
 
 
 .rocket {
+  transform: rotate(180deg);
   position: absolute;
   float: right;
   width: 40px;
-  height: 15px;
-  background-color: black;
+  height: 50px;
 }
 
 

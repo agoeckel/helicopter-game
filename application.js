@@ -1,47 +1,54 @@
 time = 0
 game = 0
 
-function Missile() {
-  this.speed = Math.floor((Math.random() * 10) + 3);
+function Rocket() {
+  this.speed = Math.floor((Math.random() * 10));
   this.area = Math.floor((Math.random() * 800) + 1);
 }
 
-rounds = Math.floor((Math.random() * 10));
+rounds = Math.floor((Math.random() * 10) + 5);
 
-missiles = []
-for(var i=0; rounds > i; i++){
-  missile = new Missile();
-  missiles.push(missile);
-}
-
-console.log(missiles)
-
-function missileTimer(){
-  if (game === 2000) { return; }
-    game += 2
-    console.log(game)
-  if(game === 1430 && time === 0){
-    alert("crashed")
+function createRockets(rounds){
+  rockets = []
+  for(var i=0; rounds > i; i++){
+    rocket = new Rocket();
+    rockets.push(rocket);
   }
-
-  setTimeout(missileTimer, 10);
-  $(".missile").css("right", game);
+  return rockets
 }
 
 function animation(id){
-  $("#"+id).animate({"right": "+=2500px"}, 700 * missiles[id].speed)
+  rocketspeed = 700 * rockets[id].speed
+
+  $("#"+id).animate({"right": "+=2000px"}, rocketspeed );
+  var percent = 0;
+  var pointer = setInterval(function() {
+    if (percent >= 100) {
+      clearInterval(pointer);
+      rocket = document.getElementById(id)
+      // console.log(rocket)
+      return;
+    }
+    $("#Status").text(percent);
+      // console.log(percent)
+      percent ++
+      var element = document.getElementById(id);
+      var style = window.getComputedStyle(element);
+      var right = style.getPropertyValue("right")
+      var marginTop = style.getPropertyValue("margin-top")
+      var missile = parseInt(marginTop, 10)
+      var top = missile + 50
+      var bottom = missile - 50
+
+    if((bottom < time) && (time < top) === true){
+      if((parseInt(right, 10) >= 1390) && (parseInt(right, 10) <= 1440)){
+        $("#box").html("<img src=explosion.gif-c200>")
+        clearInterval(pointer);
+        percent = 100
+      }
+    }
+  }, 30);
 }
-
-//   $("."+i).css({"right": game, "margin-top": missile.area});
-
-// for(var i=0; missiles.length > i; i++){
-
-
-//     $(".missile").after("<div class='missile'  + i + 'style='right:" + game + "px;margin-top:" + missiles[i].place + "px'></div>");
-//     $("#missile").after("<div class='missile " + i +"'style='right:" +  game + "px;margin-top:" + missiles[i].place + "px'></div>");
-//     $("."+i).css({"right": game, "margin-top": missile.place});
-//   }
-// });
 
 
 
@@ -54,10 +61,10 @@ function timeBackward (){
 }
 
 function timeForward (){
-  if (unClick === false || time >= window.innerHeight - 100 ) { return; }
-  time += 3
-  if(time === (window.innerHeight - 98)){
-    alert("crashed")
+  if (unClick === false || time >= window.innerHeight - 96 ) { return; }
+    time += 3
+  if(time === (window.innerHeight - 96)){
+    $("#box").html("<img src=explosion.gif-c200>")
   }
   setTimeout(timeForward, 1);
   $('#box').css('margin-top', time);
@@ -69,25 +76,25 @@ function timeForward (){
 };
 
 $(document).ready(function(){
-  missileTimer();
 
-  for (var i=0; i < missiles.length; i++){
-    $(".missile").after("<div class=rocket " + 'id='+ i + " style=margin-top:"+ i * 100 + "px;right:" +  -100 + "px;></div>");
-  }
+  createRockets(rounds)
 
-  for (var i=0; i < missiles.length; i++){
+  window.setInterval(function(){
+    $(".rocket").remove()
+    createRockets(rounds);
+    for (var i=0; i < rockets.length; i++){
+
+      $(".missile").after("<div class=rocket " + 'id='+ i + " style=margin-top:"+ i * 100 + "px;right:" +  -100 + "px;><img src=missile.gif height=30></div>");
+      animation(i);
+    }
+  }, 5000);
+
+  for (var i=0; i < rockets.length; i++){
+    $(".missile").after("<div class=rocket " + 'id='+ i + " style=margin-top:"+ i * 100 + "px;right:" +  -100 + "px;><img src=missile.gif height=30></div>");
     animation(i);
   }
 
   marginTop = 0
-
-
-
-// add loop for missiles to check if they have reached max margin, if so, start back to zero and start animation method
-// for (var i=0; i < missiles.length; i++){
-//   if()
-// }
-//  if()
 
   while((window.innerHeight - 100) > marginTop){
     $(window).mousedown(function(e){
